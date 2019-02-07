@@ -32,6 +32,48 @@ namespace LeanWork.Tests
             Assert.True(result);
         }
 
+        [Trait("Category", "Card"), Trait("Categoria", "Models")]
+        [Theory(DisplayName = "Validar cartão com sucesso, exemplos do desafio")]
+        [InlineData("VISA", "4111111111111111")]
+        [InlineData("VISA", "4012888888881881")]
+        [InlineData("AMEX", "378282246310005")]
+        [InlineData("Discover", "6011111111111117")]
+        [InlineData("MasterCard", "5105105105105100")]
+        public void Validar_cartao_com_sucesso_exemplos(string flag, string number)
+        {
+            //Arrange
+            var testObject = new Card();
+            testObject.Number = number;
+            testObject.CardFlag = flag;
+
+            //Act
+            var result = testObject.Validate();
+
+            //Assert
+            Assert.True(testObject.Valid);
+            Assert.True(result);
+        }
+
+        [Trait("Category", "Card"), Trait("Categoria", "Models")]
+        [Theory(DisplayName = "Validar cartão com falha, exemplos do desafio")]
+        [InlineData("VISA", "4111111111111")]
+        [InlineData("MasterCard", "5105105105105106")]
+        [InlineData("Desconhecido", "9111111111111111")]
+        public void Validar_cartao_com_falha_exemplos(string flag, string number)
+        {
+            //Arrange
+            var testObject = new Card();
+            testObject.Number = number;
+            testObject.CardFlag = flag;
+
+            //Act
+            var result = testObject.Validate();
+
+            //Assert
+            Assert.False(testObject.Valid);
+            Assert.False(result);
+        }
+
 
         [Trait("Category", "Card"), Trait("Categoria", "Models")]
         [Fact(DisplayName = "Validar cartão falha bandeira inválida")]
