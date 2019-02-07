@@ -1,0 +1,91 @@
+@section scripts { 
+    <script> 
+        $("#valid").click(function () {
+            
+            if (validateForm())
+                $.ajax({
+                    url: "/Card/Valid",
+                    type: "post",
+                    data: $("form").serialize(), //if you need to post Model data, use this
+                    success: function (result) {
+                        if(result.valid == true)
+                            $("#successResult").show();
+                        else
+                            $("#failedResult").show();
+                    },
+                    statusCode: {
+                        400: function() {
+                            $("#failedResult").show();
+                        }
+                    }
+                });
+            })
+
+        function validateForm(){
+            $("#successResult").hide();
+            $("#failedResult").hide();
+
+            var n = $("#number")[0].value;
+            if (n == null || n == undefined || n == "")
+            {
+                alert("Informe o número do cartão.");
+                return false;
+            }
+
+            var f = $("#flag")[0].value;
+            if (f== null || f == undefined || f == "")
+            {
+                alert("Informe a bandeira do cartão.");
+                return false;
+            }
+
+            return true;
+        }
+
+    </script>
+}
+
+@model LeanWorkProject.Models.Card
+@{
+    ViewData["Title"] = "Card";
+}
+
+<h2>@ViewData["Message"]</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <form>
+                <div class="panel-heading">Insira os dados do cartão</div>    
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" asp-for="Number" class="form-control" placeholder="Número" required="true" id="number" >
+                    </div>
+                    <div class="form-group">
+                        <input type="text" asp-for="OwnerName" class="form-control" placeholder="Proprietário">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" asp-for="CardFlag" class="form-control" placeholder="Bandeira" required="true" id="flag">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" asp-for="ExpiringDate" class="form-control" placeholder="Vencimento">
+                    </div>
+                    <button type="button" class="btn btn-default" id="valid">Validar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h4>Resultado</h4>
+            <div class="alert alert-success" role="alert" style="display: none" id="successResult">
+                <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                <span class="sr-only">Message:</span> Cartão válido.
+            </div>
+
+            <div class="alert alert-danger" role="alert" style="display: none" id="failedResult">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span> Cartão inválido.
+            </div>
+        
+    </div>
+</div>
